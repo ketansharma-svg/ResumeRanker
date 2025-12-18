@@ -8,9 +8,9 @@ import { useState } from "react";
 // import { useRef } from "react";
 
 export default function uploadResume() {
-  const [folder,setFolder]=useState()
+  const [folder,setFolder]=useState<FileList|null>(null)
   // let  inputRef=useRef<HTMLInputElement|null>(null)
-  function handleFolder(e){
+  function handleFolder(e:any){
       console.log(e.target.files)
   }
   return (
@@ -39,7 +39,7 @@ export default function uploadResume() {
             <div className="flex h-40 flex-col items-center justify-center rounded-xl border-2 border-dashed hover:border-[#0f88ae] hover:bg-emerald-50 text-center">
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
                 <Upload className="h-6 w-6 text-emerald-600 transition transition-transform duration-300"/>
-                 <input  type="file"  multiple    className="hidden" id="resume-upload" value={folder} onChange={(e)=>handleFolder(e)}  accept="application/pdf"/>
+                 <input  type="file"  multiple    className="hidden" id="resume-upload"  onChange={(e)=>handleFolder(e)}  accept="application/pdf"/>
               </div>
               <p className="text-sm font-medium text-slate-700">
                 Drag & drop resumes here

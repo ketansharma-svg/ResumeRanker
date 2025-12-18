@@ -57,7 +57,7 @@ export default function Home() {
               <Button  className="bg-[#28457d] text-white font-bold p-2 hover:bg-[#152c57]  transition transition-transform duration-300 ease-in-out hover:translate-y-0.5" size="lg">
              
                 Analyze My Resume
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right-icon lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-arrow-right-icon lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               
               </Button>
             </Link>
@@ -181,7 +181,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="0">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search-corner-icon lucide-file-search-corner" className="text-white"><path d="M11.1 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.589 3.588A2.4 2.4 0 0 1 20 8v3.25" className="text-white" /><path d="M14 2v5a1 1 0 0 0 1 1h5" className="text-white" /><path d="m21 22-2.88-2.88" className="text-white" /><circle cx="16" cy="17" r="3" className="text-white" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-file-search-corner-icon lucide-file-search-corner text-white" ><path d="M11.1 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.589 3.588A2.4 2.4 0 0 1 20 8v3.25" className="text-white" /><path d="M14 2v5a1 1 0 0 0 1 1h5" className="text-white" /><path d="m21 22-2.88-2.88" className="text-white" /><circle cx="16" cy="17" r="3" className="text-white" /></svg>
             </div>
             <h3 className="font-medium text-lg mb-2">Smart Analysis</h3>
             <p className="text-gray-500 text-sm">
@@ -191,7 +191,7 @@ export default function Home() {
 
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="100">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column-increasing-icon lucide-chart-column-increasing" className="text-white"><path d="M13 17V9" className="text-white" /><path d="M18 17V5" className="text-white" /><path d="M3 3v16a2 2 0 0 0 2 2h16" className="text-white" /><path d="M8 17v-3" className="text-white" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-chart-column-increasing-icon lucide-chart-column-increasing text-white" ><path d="M13 17V9" className="text-white" /><path d="M18 17V5" className="text-white" /><path d="M3 3v16a2 2 0 0 0 2 2h16" className="text-white" /><path d="M8 17v-3" className="text-white" /></svg>
             </div>
             <h3 className="font-medium text-lg mb-2">Detailed Scoring</h3>
             <p className="text-gray-500 text-sm">
@@ -203,7 +203,7 @@ export default function Home() {
 
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="0">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target-icon lucide-target" className="text-white"><circle cx="12" cy="12" r="10" className="text-white" /><circle cx="12" cy="12" r="6" className="text-white" /><circle cx="12" cy="12" r="2" className="text-white" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-target-icon lucide-target text-white" ><circle cx="12" cy="12" r="10" className="text-white" /><circle cx="12" cy="12" r="6" className="text-white" /><circle cx="12" cy="12" r="2" className="text-white" /></svg>
             </div>
             <h3 className="font-medium text-lg mb-2">ATS Optimization</h3>
             <p className="text-gray-500 text-sm">
@@ -225,7 +225,7 @@ export default function Home() {
 
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="0">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-icon lucide-shield" className="text-white"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" className="text-white" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-shield-icon lucide-shield text-white"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" className="text-white" /></svg>
             </div>
             <h3 className="font-medium text-lg mb-2">Secure & Private</h3>
             <p className="text-gray-500 text-sm">
@@ -236,7 +236,7 @@ export default function Home() {
 
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="0">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up-icon lucide-trending-up" className="text-white"><path d="M16 7h6v6" className="text-white" /><path d="m22 7-8.5 8.5-5-5L2 17" className="text-white" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-trending-up-icon lucide-trending-up text-white" ><path d="M16 7h6v6" className="text-white" /><path d="m22 7-8.5 8.5-5-5L2 17" className="text-white" /></svg>
             </div>
             <h3 className="font-medium text-lg mb-2">Career Insights</h3>
             <p className="text-gray-500 text-sm">
