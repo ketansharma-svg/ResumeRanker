@@ -1,7 +1,21 @@
 {
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.1",
+    "ai": "^6.0.3",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.8.0",
+    "cookie-parser": "^1.4.7",
+    "cookies": "^0.9.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "nodemon": "^3.1.11"
+    "jsonwebtoken": "^9.0.3",
+    "mammoth": "^1.11.0",
+    "mongoose": "^9.0.2",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
+    "pdf-parse": "^1.1.1"
   },
   "name": "backend",
   "version": "1.0.0",

@@ -1,8 +1,58 @@
 "use client"
 import { Button } from "@/components/ui/button"
+import instance from "@/src/axios"
 import { FileTextIcon } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { useAppDispatch } from "../../Hooks"
+import { setIsOnline } from "../../Features/Counter/Counter"
 export default function LoginPage() {
+
+
+
+
+        const [form,setForm]=useState({
+          email:"",
+          password:""
+        })
+let router=useRouter()
+let dispatch=useAppDispatch()
+function formdata(e){
+ const {name,value}=e.target
+setForm((pre)=>({...pre,[name]:value}))
+}
+console.log(form)
+
+
+async function handelsumbit(e) {
+  e.preventDefault()
+  try{
+  let res=await instance.post("/ranking/send/get/login",form)
+  console.log(res)
+  if(res.data){
+    toast("Login Successfully")
+    dispatch(setIsOnline(true))
+    setForm({
+       email:"",
+       password:""
+    })
+router.push("/")
+  }
+  }catch(err){
+    toast("Something Went Wrong")
+  }
+}
+
+
+
+
+
+
+
+
+
   return (
     <div className="h-[91vh] bg-[#f6f8f9] flex items-center justify-center">
       <div>
@@ -23,7 +73,7 @@ export default function LoginPage() {
      
         <div className="w-[400px] bg-white p-6 rounded-xl shadow-md">
 
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handelsumbit}>
             <div className="text-center">
               <h2 className="font-bold text-lg text-[#0F1729]">
                 Welcome Back
@@ -38,6 +88,7 @@ export default function LoginPage() {
               <label className="text-sm font-normal text-[#0F1729] ">Email Address</label>
               <input
                 type="text"
+                name="email"
                 placeholder="you@example.com"
                 className="
                   border border-gray-300 rounded-md
@@ -46,6 +97,9 @@ export default function LoginPage() {
                   focus:border-[#23d8c6]
                   focus:ring-1 focus:ring-[#23d8c6]/40
                 "
+
+                value={form.email}
+                 onChange={formdata}
               />
             </div>
 
@@ -55,6 +109,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 placeholder="••••••••"
+                name="password"
                 className="
                   border border-gray-300 rounded-md
                   px-3 py-2
@@ -62,13 +117,15 @@ export default function LoginPage() {
                   focus:border-[#23d8c6]
                   focus:ring-1 focus:ring-[#23d8c6]/40
                 "
+                value={form.password}
+                onChange={formdata}
               />
             </div>
 
           
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-[#65756B]">
-                <input type="checkbox" id="rememberme" />
+                <input type="checkbox" id="rememberme" required/>
                 Remember me
               </label>
               <a className="text-[#1DAFA1] underline cursor-pointer">
@@ -78,6 +135,7 @@ export default function LoginPage() {
 
             {/* Button */}
             <Button
+             type="submit"
               className="
                 bg-[#254076] text-white
                 transition-transform duration-300

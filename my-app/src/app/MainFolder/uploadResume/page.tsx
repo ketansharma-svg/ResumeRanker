@@ -5,19 +5,78 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../../components
 import { Button } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
 import { useState } from "react";
+import { toast } from "sonner";
+import instance from "@/src/axios";
 // import { useRef } from "react";
 
 export default function uploadResume() {
-  const [folder,setFolder]=useState<FileList|null>(null)
+  const [folder, setFolder] = useState<File[]>([])
+  const [textarea, setTextarea] = useState<string>("")
+
   // let  inputRef=useRef<HTMLInputElement|null>(null)
-  function handleFolder(e:any){
-      console.log(e.target.files)
+  function handleFolder(filelist: FileList) {
+    const value = Array.from(filelist).filter(
+      (item) =>
+        item.type === "application/pdf" ||
+        item.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    );
+    console.log("value", value)
+    if (value.length !== filelist.length) {
+      alert("Only PDF or DOCX files allowed");
+    }
+
+    setFolder(value);
   }
+  console.log("folder", folder)
+
+
+
+  async function handelResume() {
+    if (textarea) {
+      let formData = new FormData()
+      folder.forEach(files => {
+        formData.append("files", files)
+      })
+
+      formData.append("textarea", textarea)
+      console.log(formData)
+
+
+      try {
+
+        let res = await instance.post("/ranking/send/LoginUserOnly/Upload-Resume/Ranking/Score", formData, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        console.log("response", res)
+      } catch (err) {
+        toast("Error Found")
+      }
+
+
+
+
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
   return (
     <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-2">
-  
+
       <div className="space-y-6">
-    
+
         <Card className="rounded-2xl">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Upload Resumes</CardTitle>
@@ -25,30 +84,42 @@ export default function uploadResume() {
           <CardContent >
             <label htmlFor="resume-upload" className="cursor-pointer">
               <div
-                 
-                
-                 onDragOver={(e)=>e.preventDefault()}
-                 onDrop={(e)=>{
+
+
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
                   e.preventDefault()
-                   handleFolder(e.dataTransfer.files)
-                   console.log(e.dataTransfer.files)
+                  handleFolder(e.dataTransfer.files)
+                  console.log(e.dataTransfer.files)
                 }}
               >
 
-             
-            <div className="flex h-40 flex-col items-center justify-center rounded-xl border-2 border-dashed hover:border-[#0f88ae] hover:bg-emerald-50 text-center">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-                <Upload className="h-6 w-6 text-emerald-600 transition transition-transform duration-300"/>
-                 <input  type="file"  multiple    className="hidden" id="resume-upload"  onChange={(e)=>handleFolder(e)}  accept="application/pdf"/>
+
+                <div className="flex h-40 flex-col items-center justify-center rounded-xl border-2 border-dashed hover:border-[#0f88ae] hover:bg-emerald-50 text-center">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+                    <Upload className="h-6 w-6 text-emerald-600 transition transition-transform duration-300" />
+                    <input
+                      type="file"
+                      multiple
+                      className="hidden"
+                      id="resume-upload"
+                      accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          handleFolder(e.target.files);
+                        }
+                      }}
+                    />
+
+                  </div>
+                  <p className="text-sm font-medium text-slate-700">
+                    Drag & drop resumes here
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    or click to browse • PDF files only
+                  </p>
+                </div>
               </div>
-              <p className="text-sm font-medium text-slate-700">
-                Drag & drop resumes here
-              </p>
-              <p className="text-xs text-slate-500">
-                or click to browse • PDF files only
-              </p>
-            </div>
-             </div>
             </label>
           </CardContent>
         </Card>
@@ -62,6 +133,10 @@ export default function uploadResume() {
           </CardHeader>
           <CardContent className="space-y-3">
             <Textarea
+
+              required
+
+              onChange={(e) => setTextarea(e.target.value)}
               placeholder={`Paste the job description here...
 
 Example:
@@ -70,8 +145,17 @@ We are looking for a Frontend Developer with:
 • Strong TypeScript skills
 • Experience with REST APIs
 • Knowledge of modern CSS frameworks`}
-              className="min-h-[180px] resize-none  border-2
-    border-gray-300 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-[#0f88ae] "
+              className="h-48                 
+    w-full              
+    border-2 border-gray-300
+    rounded-md
+    p-2
+    overflow-y-auto     
+    overflow-x-hidden    
+    resize-none           
+    focus:outline-none
+    focus:border-[#0e8ca2]
+    focus:ring-0 "
             />
             <p className="text-xs text-slate-500">
               Include required skills, experience level, and key responsibilities for better matching accuracy.
@@ -81,7 +165,7 @@ We are looking for a Frontend Developer with:
 
         {/* CTA Button */}
         <Button className="w-full rounded-xl bg-[#28457d] py-6 text-base font-semibold transition transition-transform duration-300
-                hover:translate-y-0.5 hover:bg-[#152c57]">
+                hover:translate-y-0.5 hover:bg-[#152c57]"   onClick={handelResume}>
           <Sparkles className="mr-2 h-4 w-4" /> Analyze & Rank Resumes
         </Button>
       </div>
