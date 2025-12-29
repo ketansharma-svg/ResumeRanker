@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { Provider } from "react-redux";
 import { store } from "../app/Store";
 import ReduxProvider from "./ReduxProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,11 +33,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+
        <ReduxProvider>
         <Header/>
         {children}
-</ReduxProvider>
-    
+   </ReduxProvider>
+ 
          <Toaster position="top-right"  style={{top:"80px"}}/>
       </body>
     </html>

@@ -2,12 +2,12 @@
 import UserResumes from "../Models/ResumeSchema.js";
 import { extractText } from "../utils/extractText.js";
 import JobApplication from "../Models/JobApplicationResume.js"; 
+import {rankAndSelectTopResumes} from "../services/aiResumeRanker.js"
 
 export async function Resumes(req, res) {
   try {
     const user = req.userId;
-    console.log("User ID from JWT:", req.body.textarea);
-    console.log("Authenticated User:", user); 
+
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -16,7 +16,7 @@ export async function Resumes(req, res) {
       return res.status(400).json({ message: "No files uploaded" });
     }
 
-   
+  //  console.log("Files received:", req.files);
     let userResumesDoc = await UserResumes.findOne({ userId: req.userId });
 
     if (!userResumesDoc) {
@@ -26,11 +26,14 @@ export async function Resumes(req, res) {
       });
     }
 
+
+    let setvalue=new Set(req.files)
+    // console.log("set Value",setvalue)
     for (const file of req.files) {
       const textContent = await extractText(file);
-       console.log("Extracted Text Content:", textContent);
+      //  console.log("Extracted Text Content:", textContent);
       if (!textContent || !textContent.trim()) {
-        continue; // agar text extract fail ho jaye
+        continue; 
       }
 
       userResumesDoc.resumes.push({
@@ -48,14 +51,15 @@ export async function Resumes(req, res) {
    const jobApp= new JobApplication({
     userId:req.userId,
     resumeId:userResumesDoc._id,
+
     jobDescription:req.body.textarea
    })
 
 
      await jobApp.save()
-
-
-
+console.log("jobApp",jobApp)
+// console.log("job Applications", jobApp);
+await rankAndSelectTopResumes(jobApp,userResumesDoc.resumes)
    
 
     res.status(201).json({
@@ -64,7 +68,7 @@ export async function Resumes(req, res) {
       resumes: userResumesDoc.resumes
     });
   } catch (err) {
-    console.error("Resume Upload Error:", err);
+    // console.error("Resume Upload Error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
