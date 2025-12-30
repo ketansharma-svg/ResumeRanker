@@ -20,14 +20,14 @@ export default function LoginPage() {
   })
   let router = useRouter()
   let dispatch = useAppDispatch()
-  function formdata(e) {
+  function formdata(e:any) {
     const { name, value } = e.target
     setForm((pre) => ({ ...pre, [name]: value }))
   }
   console.log(form)
 
 
-  async function handelsumbit(e) {
+  async function handelsumbit(e:any) {
     e.preventDefault()
     try {
       let res = await instance.post("/ranking/send/get/login", form)

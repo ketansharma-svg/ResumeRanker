@@ -16,7 +16,7 @@ import { setIsOnline } from "../../Features/Counter/Counter"
 export default function LoginButton() {
 
 const dispatch=useAppDispatch()
-async function handelLogin(res){
+async function handelLogin(res:any){
           console.log("res",res.credential)
           try{
       let result =await instance.post("/ranking/send/LoginUserOnly/Upload-Resume/Ranking/google-auth",{token:res.credential},{withCredentials:true})

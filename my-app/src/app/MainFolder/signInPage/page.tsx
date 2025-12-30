@@ -16,7 +16,7 @@ const [checked,setChecked]=useState(false)
   })
 let router=useRouter()
   // Handle input changes
-  function handleChange(e) {
+  function handleChange(e:any) {
     const { name, value } = e.target
     setForm(prev => ({
       ...prev,
@@ -25,7 +25,7 @@ let router=useRouter()
   }
 
   // Handle form submission
- async function handleSubmit(e) {
+ async function handleSubmit(e:any) {
     e.preventDefault()
     console.log("Form submitted", form)
 try{
