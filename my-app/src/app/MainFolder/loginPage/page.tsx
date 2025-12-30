@@ -8,42 +8,43 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "../../Hooks"
 import { setIsOnline } from "../../Features/Counter/Counter"
+import LoginButton from "./GoogleAuth"
 export default function LoginPage() {
 
 
 
 
-        const [form,setForm]=useState({
-          email:"",
-          password:""
+  const [form, setForm] = useState({
+    email: "",
+    password: ""
+  })
+  let router = useRouter()
+  let dispatch = useAppDispatch()
+  function formdata(e) {
+    const { name, value } = e.target
+    setForm((pre) => ({ ...pre, [name]: value }))
+  }
+  console.log(form)
+
+
+  async function handelsumbit(e) {
+    e.preventDefault()
+    try {
+      let res = await instance.post("/ranking/send/get/login", form)
+      console.log(res)
+      if (res.data) {
+        toast("Login Successfully")
+        dispatch(setIsOnline(true))
+        setForm({
+          email: "",
+          password: ""
         })
-let router=useRouter()
-let dispatch=useAppDispatch()
-function formdata(e){
- const {name,value}=e.target
-setForm((pre)=>({...pre,[name]:value}))
-}
-console.log(form)
-
-
-async function handelsumbit(e) {
-  e.preventDefault()
-  try{
-  let res=await instance.post("/ranking/send/get/login",form)
-  console.log(res)
-  if(res.data){
-    toast("Login Successfully")
-    dispatch(setIsOnline(true))
-    setForm({
-       email:"",
-       password:""
-    })
-router.push("/")
+        router.push("/")
+      }
+    } catch (err) {
+      toast("Something Went Wrong")
+    }
   }
-  }catch(err){
-    toast("Something Went Wrong")
-  }
-}
 
 
 
@@ -56,7 +57,7 @@ router.push("/")
   return (
     <div className="h-[91vh] bg-[#f6f8f9] flex items-center justify-center">
       <div>
-         
+
       </div>
       <div className="flex flex-col items-center gap-6">
 
@@ -70,7 +71,7 @@ router.push("/")
           </h1>
         </div>
 
-     
+
         <div className="w-[400px] bg-white p-6 rounded-xl shadow-md">
 
           <form className="flex flex-col gap-4" onSubmit={handelsumbit}>
@@ -83,7 +84,7 @@ router.push("/")
               </p>
             </div>
 
-     
+
             <div className="flex flex-col gap-1 mt-5">
               <label className="text-sm font-normal text-[#0F1729] ">Email Address</label>
               <input
@@ -99,7 +100,7 @@ router.push("/")
                 "
 
                 value={form.email}
-                 onChange={formdata}
+                onChange={formdata}
               />
             </div>
 
@@ -122,10 +123,10 @@ router.push("/")
               />
             </div>
 
-          
+
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-[#65756B]">
-                <input type="checkbox" id="rememberme" required/>
+                <input type="checkbox" id="rememberme" required />
                 Remember me
               </label>
               <a className="text-[#1DAFA1] underline cursor-pointer">
@@ -135,7 +136,7 @@ router.push("/")
 
             {/* Button */}
             <Button
-             type="submit"
+              type="submit"
               className="
                 bg-[#254076] text-white
                 transition-transform duration-300
@@ -151,11 +152,15 @@ router.push("/")
             <span className="text-[#65758B] text-xs mb-10 mt-5">
               or continue with
             </span>
+            <div >
+              <LoginButton />
+            </div>
+
             <p className="text-[#65758B] text-sm">
               Don&apos;t have an account?{" "}
               <span className="text-[#1DAFA1] underline cursor-pointer">
                 <Link href="/MainFolder/signInPage">
-                Sign up free
+                  Sign up free
                 </Link>
               </span>
             </p>

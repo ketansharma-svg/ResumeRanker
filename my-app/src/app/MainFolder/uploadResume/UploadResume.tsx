@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload, Users, Sparkles } from "lucide-react";
+import { Upload, Users, Sparkles, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
 import { Button } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
@@ -14,9 +14,10 @@ import instance from "@/src/axios";
 export  function UploadResume() {
   const [folder, setFolder] = useState<File[]>([])
   const [textarea, setTextarea] = useState<string>("")
-  
+  const [isDownloading,setIsDownloading]=useState<boolean>(false)
   // let  inputRef=useRef<HTMLInputElement|null>(null)
   function handleFolder(filelist: FileList) {
+    toast("Pdf Uploaded Successfully")
     const value = Array.from(filelist).filter(
       (item) =>
         item.type === "application/pdf" ||
@@ -35,7 +36,9 @@ export  function UploadResume() {
 
 
   async function handelResume() {
+    setIsDownloading(true)
     if (textarea) {
+      
       let formData = new FormData()
       folder.forEach(files => {
         formData.append("files", files)
@@ -43,7 +46,7 @@ export  function UploadResume() {
 
       formData.append("textarea", textarea)
       console.log(formData)
-
+     
 
       try {
 
@@ -167,8 +170,15 @@ We are looking for a Frontend Developer with:
 
         {/* CTA Button */}
         <Button className="w-full rounded-xl bg-[#28457d] py-6 text-base font-semibold transition transition-transform duration-300
-                hover:translate-y-0.5 hover:bg-[#152c57]"   onClick={handelResume}>
-          <Sparkles className="mr-2 h-4 w-4" /> Analyze & Rank Resumes
+                hover:translate-y-0.5 hover:bg-[#152c57]"   onClick={handelResume}  disabled={isDownloading}> 
+
+                {  isDownloading? (<Loader2 className="mr-2 h-4 w-4"/>):(  <>
+                <Sparkles className="mr-2 h-4 w-4" /> Analyze & Rank Resumes 
+                </>)
+
+
+                }
+         
         </Button>
       </div>
 

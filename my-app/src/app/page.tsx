@@ -170,8 +170,10 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="py-16 px-8" data-aos="zoom-in">
-        <h2 className="text-3xl font-bold text-center mb-2">
+
+<div className="bg-[#f9fafb]">
+   <div className="py-16 px-8 " data-aos="zoom-in">
+        <h2 className="text-3xl font-bold text-center mb-2" >
           Powerful Features
         </h2>
         <p className="text-center text-gray-500 mb-12" data-aos="fade-up">
@@ -247,6 +249,8 @@ export default function Home() {
         
         </div>
       </div>
+</div>
+   
 
     </>
 

@@ -55,7 +55,7 @@ const handelLogout = async () => {
   try {
     await instance.post("/ranking/send/LoginUserOnly/Upload-Resume/Ranking/logoutsystem", {}, { withCredentials: true });
     dispatch(setIsOnline(false));
-    router.push("/MainFolder/loginPage"); // redirect after logout
+    router.push("/MainFolder/loginPage"); 
   } catch (err) {
     console.log("error in Logout", err);
   }

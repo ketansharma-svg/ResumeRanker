@@ -7,7 +7,8 @@ import { Toaster } from "sonner";
 import { Provider } from "react-redux";
 import { store } from "../app/Store";
 import ReduxProvider from "./ReduxProvider";
-
+import Providers from "./Providers/page";
+import Footer from "./Components/Footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -36,7 +37,11 @@ export default function RootLayout({
 
        <ReduxProvider>
         <Header/>
+
+      <Providers>
         {children}
+     </Providers>
+     <Footer/>
    </ReduxProvider>
  
          <Toaster position="top-right"  style={{top:"80px"}}/>

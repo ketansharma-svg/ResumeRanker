@@ -1,6 +1,8 @@
 import User from "../Models/Auth.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_ID)
 export async function Register(req, res) {
   try {
     const { name, email, password } = req.body
@@ -91,22 +93,80 @@ export async function LogOutUser(req, res) {
     })
 
 
-    res.clearCookie("login_refresh_token_wrank",{
-      httpOnly:true,
-      secure:false,
-      sameSite:"lax",
-      maxAge:7*24*60*60*1000  
+    res.clearCookie("login_refresh_token_wrank", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
-    
-    res.clearCookie("token",{
-      httpOnly:true,
-      secure:false,
-      sameSite:"lax",
-      maxAge:7*24*60*60*1000  
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.status(200).json({ message: "User logged out successfully" })
   } catch (err) {
     res.status(500).json({ message: "Internal Server Error " })
+  }
+}
+
+
+
+
+
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+export async function ControllerGoogleAuth(req, res) {
+  try {
+    const { token } = req.body;
+
+   
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+
+  
+    let user = await User.findOne({ email });
+
+    if (!user) {
+     
+      user = await User.create({
+        email,
+        username:name,
+        avatar: picture,
+        googleId: payload.sub,
+      });
+    }
+
+    
+    const authToken = jwt.sign(
+      { id: user._id, email: user.email, name: user.name },
+      process.env.SECRET_KEY,
+      { expiresIn: "7d" }
+    );
+
+   
+    res.cookie("token", authToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+  
+    return res.status(200).json({
+      message: "Google login successful",
+      user,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({ message: "Google auth failed" });
   }
 }
