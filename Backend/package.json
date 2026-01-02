@@ -28,10 +28,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",       
-  "dev": "nodemon index.js",
-  "build": "echo 'No build needed for backend'"
-,
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build": "echo 'No build needed for backend'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

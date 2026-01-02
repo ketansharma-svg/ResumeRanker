@@ -1,14 +1,12 @@
-// controllers/resume.controller.js
 import UserResumes from "../Models/ResumeSchema.js";
 import { extractText } from "../utils/extractText.js";
-import JobApplication from "../Models/JobApplicationResume.js"; 
-import {rankAndSelectTopResumes} from "../services/aiResumeRanker.js"
+import { rankAndSelectTopResumes } from "../services/aiResumeRanker.js";
 
 export async function Resumes(req, res) {
   try {
-    const user = req.userId;
+    const userId = req.userId;
 
-    if (!user) {
+    if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -16,59 +14,55 @@ export async function Resumes(req, res) {
       return res.status(400).json({ message: "No files uploaded" });
     }
 
-  //  console.log("Files received:", req.files);
-    let userResumesDoc = await UserResumes.findOne({ userId: req.userId });
+    if (!req.body.jobDescription) {
+      return res.status(400).json({ message: "Job Description is required" });
+    }
+
+    let userResumesDoc = await UserResumes.findOne({ userId });
 
     if (!userResumesDoc) {
       userResumesDoc = new UserResumes({
-        userId: req.userId,
-        resumes: []
+        userId,
+        resumes: [],
       });
     }
 
+    const addedResumes = [];
 
-    let setvalue=new Set(req.files)
-    // console.log("set Value",setvalue)
     for (const file of req.files) {
       const textContent = await extractText(file);
-      //  console.log("Extracted Text Content:", textContent);
-      if (!textContent || !textContent.trim()) {
-        continue; 
-      }
 
-      userResumesDoc.resumes.push({
+      if (!textContent || !textContent.trim()) continue;
+
+      const resumeObj = {
         fileName: file.originalname,
         fileType: file.mimetype.includes("pdf") ? "pdf" : "docx",
         fileSize: file.size,
-        textContent: textContent.trim()
-      });
+        textContent: textContent.trim(),
+        jobDescription: req.body.jobDescription, 
+        aiResult: [], 
+      };
+
+      userResumesDoc.resumes.push(resumeObj);
+      addedResumes.push(resumeObj);
     }
-     await userResumesDoc.save();
-    if(!req.body.textarea){
-      return res.status(400).json({message:"Job Description is required"})
-    }
 
-   const jobApp= new JobApplication({
-    userId:req.userId,
-    resumeId:userResumesDoc._id,
+    await userResumesDoc.save();
 
-    jobDescription:req.body.textarea
-   })
-
-
-     await jobApp.save()
-console.log("jobApp",jobApp)
-// console.log("job Applications", jobApp);
-await rankAndSelectTopResumes(jobApp,userResumesDoc.resumes)
-   
-
+    
+ const loner=await  rankAndSelectTopResumes(
+      
+      userResumesDoc.resumes,
+      userResumesDoc.jobDescription
+    )
+console.log("loner",loner)
     res.status(201).json({
       success: true,
       totalResumes: userResumesDoc.resumes.length,
-      resumes: userResumesDoc.resumes
+      resumes: userResumesDoc.resumes,
     });
   } catch (err) {
-    // console.error("Resume Upload Error:", err);
+    console.error("Resume Upload Error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }

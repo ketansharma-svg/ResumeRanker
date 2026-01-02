@@ -24,6 +24,14 @@ app.use(cors(corsOptions))
 
 
 app.use("/ranking", router)
+app.use((error,req,res,next)=>{
+     console.log(error)
+     if(error.code == "LIMIT_FILE_COUNT"){
+          return res.status(400).json({message:"Limit exsits"})
+     }
+})
+
+
 app.listen(port, (req, res) => {
      console.log(`Server started at Port ${port}`)
 

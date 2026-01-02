@@ -37,7 +37,9 @@ import multer from "multer";
 
 const upload = multer({
   storage: multer.memoryStorage(),
+  
   limits: {
+    files:15,
     fileSize: 15 * 1024 * 1024
   }
 });
