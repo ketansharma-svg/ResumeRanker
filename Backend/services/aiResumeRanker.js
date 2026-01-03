@@ -4,42 +4,45 @@ import "dotenv/config";
 // --- Gemini v1 REST API call ---
 async function callGemini(prompt) {
   const API_KEY = process.env.GEMINI_API_KEY;
-  if (!API_KEY) throw new Error("GEMINI_API_KEY not set in environment");
+  if (!API_KEY) throw new Error("GEMINI_API_KEY not set");
 
-  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+  const url =
+    `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${API_KEY}`;
 
   const response = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      contents: [
-        {
-          parts: [{ text: prompt }],
-        },
-      ],
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+  temperature: 0.2
+}
     }),
   });
 
   const data = await response.json();
+   console.log("data found",data)
+  console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2)); // 🔥 DEBUG
 
-  // Safe extract text from AI response
-  const text = data?.candidates?.[0]?.content?.[0]?.text || "";
-  return text;
+  // ✅ CORRECT PATH
+  return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
+
 
 // --- Rank resumes function ---
 export async function rankAndSelectTopResumes(resumes = [], jobDescription, topK = 20) {
   if (!Array.isArray(resumes) || resumes.length === 0) return [];
 
-  console.log("AI Ranker started, resumes:", resumes.length);
-
+  // console.log("AI Ranker started, resumes:", resumes,jobDescription);
+   
   const results = [];
-  console.log("Resume text present:", resumes.textContent);
-  console.log("Job Description present:", jobDescription);
+  
   for (const resume of resumes) {
-    if (!resume.textContent || !jobDescription) continue;
+    console.log("resumes All ",resume)  
+    if (!resume.textContent || !resume.jobDescription) continue;
+
+console.log("resume content",resume.jobDescription)
+console.log("hey enjoy",resume.textContent)
 
     // --- Strict prompt for JSON output ---
     const prompt = `
@@ -66,7 +69,7 @@ ${jobDescription}
       console.log("Calling Gemini AI...");
       const text = await callGemini(prompt);
 
-     
+     console.log("hello everyone",text)
       let aiOutput = {};
       const match = text.match(/\{[\s\S]*\}/); 
       if (match) {
