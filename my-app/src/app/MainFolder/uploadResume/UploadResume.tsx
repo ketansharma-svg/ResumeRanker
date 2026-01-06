@@ -12,12 +12,23 @@ import { Textarea } from "../../../../components/ui/textarea";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import instance from "@/src/axios";
+import { span } from "framer-motion/client";
+import { Span } from "next/dist/trace";
 
 export function UploadResume() {
+
+
+  interface RankedResume {
+  fileName: string;
+  finalScore: number;
+  matchedSkills: string[];
+  missingSkills: string[];
+}
+
   const [folder, setFolder] = useState<File[]>([]);
   const [textarea, setTextarea] = useState("");
   const [isDownloading, setIsDownloading] = useState(false);
-
+  const [Uploadedresumes, setUploadedResumes] = useState<RankedResume[]>([])
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
@@ -33,7 +44,7 @@ export function UploadResume() {
       (file) =>
         file.type === "application/pdf" ||
         file.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     );
 
     if (validFiles.length !== filesArray.length) {
@@ -64,7 +75,7 @@ export function UploadResume() {
     formData.append("jobDescription", textarea);
 
     try {
-      await instance.post(
+      let res = await instance.post(
         "/ranking/send/LoginUserOnly/Upload-Resume/Ranking/Score",
         formData,
         {
@@ -74,10 +85,14 @@ export function UploadResume() {
           },
         }
       );
+      console.log("response", res.data.resumes)
+      if (res.data.resumes) {
+        setUploadedResumes(res.data.resumes)
+        toast.success("Resumes uploaded & ranked successfully");
+        setFolder([]);
+        setTextarea("");
+      }
 
-      toast.success("Resumes uploaded & ranked successfully");
-      setFolder([]);
-      setTextarea("");
     } catch (err) {
       toast.error("Upload failed");
     } finally {
@@ -88,7 +103,7 @@ export function UploadResume() {
   return (
     <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-2">
       <div className="space-y-6">
-     
+
         <Card className="rounded-2xl">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">
@@ -207,20 +222,72 @@ export function UploadResume() {
         </Button>
       </div>
 
- 
-      <Card className="flex items-center justify-center rounded-2xl">
-        <CardContent className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
-            <Users className="h-7 w-7 text-emerald-600" />
-          </div>
-          <h3 className="text-lg font-semibold">
-            Ready to Rank Candidates
-          </h3>
-          <p className="mt-2 text-sm text-slate-500">
-            Upload resumes and get AI-powered ranking instantly.
+<Card className="flex items-center justify-center rounded-2xl">
+  {Uploadedresumes.length > 0 ? (
+    <CardContent className="w-full space-y-4">
+      {Uploadedresumes.map((item, index) => (
+        <div
+          key={index}
+          className="rounded-xl border p-4 space-y-2"
+        >
+          <h1 className="font-semibold text-lg">
+            {item.fileName}
+          </h1>
+
+          <p className="text-sm">
+            <strong>Final Score:</strong>{" "}
+            <span className="text-emerald-600">
+              {item.finalScore}
+            </span>
           </p>
-        </CardContent>
-      </Card>
+
+          <div>
+            <p className="font-medium text-sm">Matched Skills:</p>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {item.matchedSkills.map((skill, i) => (
+                <span
+                  key={i}
+                  className="rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="font-medium text-sm text-red-600">
+              Missing Skills:
+            </p>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {item.missingSkills.map((skill, i) => (
+                <span
+                  key={i}
+                  className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </CardContent>
+  ) : (
+    <CardContent className="text-center">
+      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
+        <Users className="h-7 w-7 text-emerald-600" />
+      </div>
+      <h3 className="text-lg font-semibold">
+        Ready to Rank Candidates
+      </h3>
+      <p className="mt-2 text-sm text-slate-500">
+        Upload resumes and get AI-powered ranking instantly.
+      </p>
+    </CardContent>
+  )}
+</Card>
+
     </div>
   );
 }

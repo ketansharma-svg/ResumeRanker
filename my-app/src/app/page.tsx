@@ -180,7 +180,7 @@ export default function Home() {
           Everything you need to create a resume that gets noticed
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-[85%] m-auto">
           <div className="p-6 bg-white rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="0">
             <div className="w-12 h-12 bg-teal-400 rounded-lg flex items-center justify-center mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-file-search-corner-icon lucide-file-search-corner text-white" ><path d="M11.1 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.589 3.588A2.4 2.4 0 0 1 20 8v3.25" className="text-white" /><path d="M14 2v5a1 1 0 0 0 1 1h5" className="text-white" /><path d="m21 22-2.88-2.88" className="text-white" /><circle cx="16" cy="17" r="3" className="text-white" /></svg>

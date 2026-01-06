@@ -31,7 +31,7 @@ import { setIsOnline } from "../Features/Counter/Counter";
       });
       console.log("response from auth user", res.data);
       
-      if (res.data.message === "User Authenticated Successfully") {
+      if (res.data.message === "User Authenticated Successfully"){
         dispatch(setIsOnline(true));
         console.log("user is authenticated")
         router.push("/");
@@ -55,6 +55,7 @@ const handelLogout = async () => {
   try {
     await instance.post("/ranking/send/LoginUserOnly/Upload-Resume/Ranking/logoutsystem", {}, { withCredentials: true });
     dispatch(setIsOnline(false));
+    router.push("/")
     router.push("/MainFolder/loginPage"); 
   } catch (err) {
     console.log("error in Logout", err);
@@ -71,7 +72,7 @@ const handelLogout = async () => {
       <header className="sticky top-0 z-50 border-b bg-white/70 backdrop-blur-md">
     <div className="flex items-center justify-between h-16 px-6">
 
-      {/* Logo */}
+
       <Link href={"/"}>
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0e8ca2]">
@@ -83,13 +84,13 @@ const handelLogout = async () => {
       </div>
       </Link>
 
-      {/* Nav */}
-      <div className="flex items-center gap-6 text-xs">
+    
+      <div className="flex items-center gap-6 text-xs font-semibold">
         <Link href="/">Home</Link>
         <Link href="/MainFolder/uploadResume">Upload Resume</Link>
       </div>
 
-      {/* Auth */}
+
       <div className="flex items-center gap-3">
         <Button variant="ghost" asChild  className="hover:text-[#23d8c6] hover:bg-[#e3fdfa]">
           { isOnline?<span onClick={handelLogout} className="cursor-pointer">Log out</span>: <Link href="/MainFolder/loginPage">Log in</Link>

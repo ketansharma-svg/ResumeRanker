@@ -10,22 +10,39 @@ const userResumeSchema = new mongoose.Schema(
     resumes: [
       {
         fileName: { type: String, required: true },
-        fileType: { type: String, enum: ["pdf", "docx"], required: true },
+        fileType: {
+          type: String,
+          enum: ["pdf", "docx"],
+          required: true,
+        },
         fileSize: { type: Number, required: true },
         textContent: { type: String, required: true },
+
         aiResult: [
           {
-            yearsOfExperience: Number,
+            yearsOfExperience: { type: Number, default: 0 },
             experienceLevel: {
               type: String,
               enum: ["fresher", "experienced"],
+              default: "fresher",
             },
-            baseScore: Number,
-            penaltyApplied: Boolean,
-            finalScore: Number,
-            reason: String,
+            baseScore: { type: Number, default: 0 },
+          
+            finalScore: { type: Number, default: 0 },
+           
+
+         
+            matchedSkills: {
+              type: [String],
+              default: [],
+            },
+            missingSkills: {
+              type: [String],
+              default: [],
+            },
           },
         ],
+
         jobDescription: {
           type: String,
           required: true,

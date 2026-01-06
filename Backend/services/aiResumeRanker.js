@@ -1,131 +1,98 @@
-import fetch from "node-fetch";
+import Groq from "groq-sdk";
 import "dotenv/config";
+import UserResumes from "../Models/ResumeSchema.js";
 
-// --- Gemini v1 REST API call ---
-async function callGemini(prompt) {
-  const API_KEY = process.env.GEMINI_API_KEY;
-  if (!API_KEY) throw new Error("GEMINI_API_KEY not set");
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
-  const url =
-    `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${API_KEY}`;
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-  temperature: 0.2
-}
-    }),
-  });
-
-  const data = await response.json();
-   console.log("data found",data)
-  console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2)); // 🔥 DEBUG
-
-  // ✅ CORRECT PATH
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-}
-
-
-// --- Rank resumes function ---
-export async function rankAndSelectTopResumes(resumes = [], jobDescription, topK = 20) {
+export async function rankAndSelectTopResumes(
+  resumes = [],
+  jobDescription,
+  topK = 20
+) {
   if (!Array.isArray(resumes) || resumes.length === 0) return [];
 
-  // console.log("AI Ranker started, resumes:", resumes,jobDescription);
-   
   const results = [];
-  
   for (const resume of resumes) {
-    console.log("resumes All ",resume)  
     if (!resume.textContent || !resume.jobDescription) continue;
+    console.log("resume",resume)
 
-console.log("resume content",resume.jobDescription)
-console.log("hey enjoy",resume.textContent)
-
-    // --- Strict prompt for JSON output ---
     const prompt = `
 You are an ATS (Applicant Tracking System).
 
-Compare this resume with the job description.
-Return ONLY valid JSON. Do not add extra text, explanations, or formatting. Example format:
+Compare the resume with the job description.
+Return ONLY valid JSON (no markdown, no explanation).
 
 {
-  "overallScore": 0-100,
-  "experienceLevel": "fresher or experienced",
-  "yearsOfExperience": 0,
-  "shortReason": ""
+   "resume_id":"string"
+   "ApplyerName": "string",
+   "overallScore": 0-100,
+   "experienceLevel": "fresher or experienced",
+   "yearsOfExperience": number,
+   "shortReason": "string",
+   "matchedSkills": [],
+   "missingSkills": []
 }
 
 Resume:
 ${resume.textContent}
 
 Job Description:
-${jobDescription}
+${resume.jobDescription}
 `;
 
     try {
-      console.log("Calling Gemini AI...");
-      const text = await callGemini(prompt);
+      const completion = await groq.chat.completions.create({
+        model: "groq/compound-mini",
+        messages: [
+          {
+            role: "system",
+            content: "Return ONLY valid JSON. No explanation, no markdown."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0,
+      });
 
-     console.log("hello everyone",text)
-      let aiOutput = {};
-      const match = text.match(/\{[\s\S]*\}/); 
-      if (match) {
-        try {
-          aiOutput = JSON.parse(match[0]);
-        } catch {
-          aiOutput = {
-            overallScore: 0,
-            experienceLevel: "fresher",
-            yearsOfExperience: 0,
-            shortReason: "AI returned invalid JSON",
-          };
-        }
-      } else {
+      const raw = completion.choices[0]?.message?.content || "{}";
+      console.log("raw", raw);
+
+      let aiOutput;
+      try {
+        aiOutput = JSON.parse(raw);
+      } catch {
         aiOutput = {
+          resume_id:resume._id,
+          ApplyerName: resume.ApplyerName || "Unknown",
           overallScore: 0,
           experienceLevel: "fresher",
           yearsOfExperience: 0,
-          shortReason: "AI did not return JSON",
+          shortReason: "Invalid JSON from AI",
+          matchedSkills: [],
+          missingSkills: []
         };
       }
 
-    
-      resume.aiResult = [
-        {
-          yearsOfExperience: aiOutput.yearsOfExperience || 0,
-          experienceLevel: aiOutput.experienceLevel || "fresher",
-          baseScore: aiOutput.overallScore || 0,
-          penaltyApplied: false,
-          finalScore: aiOutput.overallScore || 0,
-          reason: aiOutput.shortReason || "",
-        },
-      ];
-
       results.push({
         resumeId: resume._id,
-        overallScore: aiOutput.overallScore || 0,
+        fileName: resume.fileName,
+        finalScore: aiOutput.overallScore || 0,
+        yearsOfExperience: aiOutput.yearsOfExperience || 0,
+        experienceLevel: aiOutput.experienceLevel || "fresher",
+        matchedSkills: aiOutput.matchedSkills || [],
+        missingSkills: aiOutput.missingSkills || []
       });
-    } catch (err) {
-      console.error("AI Error:", err.message);
 
-      resume.aiResult = [
-        {
-          yearsOfExperience: 0,
-          experienceLevel: "fresher",
-          baseScore: 0,
-          penaltyApplied: true,
-          finalScore: 0,
-          reason: "AI parsing failed",
-        },
-      ];
+    } catch (err) {
+      console.error("Groq error:", err.message);
     }
   }
 
- 
   return results
-    .sort((a, b) => b.overallScore - a.overallScore)
+    .sort((a, b) => b.finalScore - a.finalScore)
     .slice(0, topK);
 }
