@@ -13,21 +13,23 @@ app.use(cookieParser())
 connectDB()
 
 const corsOptions = {
-     origin: [process.env.FrontendLocalUrl,process.env.FRONTEND_RENDER],
+     origin: ["http://localhost:3000",
+          "https://resumeranker-1-74jh.onrender.com"],
+
      methods: ["GET", "POST", "PUT", "DELETE"],
      credentials: true
 
 }
 app.use(cors(corsOptions))
-
+app.options("*", cors(corsOptions))
 
 
 
 app.use("/ranking", router)
-app.use((error,req,res,next)=>{
+app.use((error, req, res, next) => {
      console.log(error)
-     if(error.code == "LIMIT_FILE_COUNT"){
-          return res.status(400).json({message:"Limit exsits"})
+     if (error.code == "LIMIT_FILE_COUNT") {
+          return res.status(400).json({ message: "Limit exsits" })
      }
 })
 

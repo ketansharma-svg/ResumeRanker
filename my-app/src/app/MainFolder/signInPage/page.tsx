@@ -30,7 +30,7 @@ let router=useRouter()
     console.log("Form submitted", form)
 try{
     
-let res= await instance.post("/ranking/send/Register",form)
+let res= await instance.post("/ranking/send/Register",form,{withCredentials:true})
 console.log(res)
 if(res.status==201){
     toast("Registered Successfully")

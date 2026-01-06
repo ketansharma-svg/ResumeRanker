@@ -30,7 +30,7 @@ export default function LoginPage() {
   async function handelsumbit(e:any) {
     e.preventDefault()
     try {
-      let res = await instance.post("/ranking/send/get/login", form)
+      let res = await instance.post("/ranking/send/get/login", form,{withCredentials:true})
       console.log(res)
       if (res.data) {
         toast("Login Successfully")
