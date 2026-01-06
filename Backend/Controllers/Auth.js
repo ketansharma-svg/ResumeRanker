@@ -54,11 +54,11 @@ export async function Login(req, res) {
       { expiresIn: "7d" }
     )
 
-
+const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      httpOnly: isProduction,
+      secure: isProduction,
+      sameSite: isProduction? "none":"lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -85,26 +85,27 @@ export async function UserAuthenticated(req, res) {
 
 export async function LogOutUser(req, res) {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("login_access_token_wrank", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      httpOnly: isProduction,
+      secure: isProduction,
+      sameSite: isProduction? "none":"lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
 
     res.clearCookie("login_refresh_token_wrank", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      httpOnly:isProduction,
+      secure: isProduction,
+      sameSite: isProduction? "none":"lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
 
     res.clearCookie("token", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      httpOnly: isProduction,
+      secure: isProduction,
+      sameSite: isProduction? "none":"lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.status(200).json({ message: "User logged out successfully" })
@@ -152,11 +153,11 @@ export async function ControllerGoogleAuth(req, res) {
       { expiresIn: "7d" }
     );
 
-   
+   const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", authToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      httpOnly: isProduction,
+      secure: isProduction,
+      sameSite: isProduction? "none":"lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
