@@ -13,8 +13,8 @@ app.use(cookieParser())
 connectDB()
 
 const corsOptions = {
-     origin: ["http://localhost:3000",
-          "https://resumeranker-1-74jh.onrender.com"],
+     origin: [process.env.FRONTEND_LOCALURL,
+          process.env.FRONTEND_RENDER],
 
      methods: ["GET", "POST", "PUT", "DELETE"],
      credentials: true

@@ -2,7 +2,12 @@ import User from "../Models/Auth.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { OAuth2Client } from "google-auth-library";
+import sgmail from "@sendgrid/mail"
+
 const client = new OAuth2Client(process.env.GOOGLE_ID)
+sgmail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
 export async function Register(req, res) {
   try {
     const { name, email, password } = req.body
@@ -16,12 +21,37 @@ export async function Register(req, res) {
     console.log("hash", hash)
 
 
+
+
+
+
+
+
     const user = await User.create({
       username: name,
       email,
       password: hash
     });
     console.log("user", user)
+const msg = {
+  to:email ,
+  from:sgmail, 
+  replyTo: 'ketan.sharma@W3eraa.com',
+  subject: 'Sending the email only for Fun basis',
+  text: 'WELCOME to resumeRanker',
+  html: '<strong>and easy to do anywhere</strong>',
+};
+sgmail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+
+
     res.status(201).json({ message: "User created succesfuylly" })
 
   } catch (err) {
