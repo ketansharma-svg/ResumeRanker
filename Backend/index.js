@@ -13,13 +13,12 @@ app.use(cookieParser())
 connectDB()
 
 const corsOptions = {
-     origin: [process.env.FRONTEND_LOCALURL,
-          process.env.FRONTEND_RENDER],
-
-     methods: ["GET", "POST", "PUT", "DELETE"],
-     credentials: true
-
+  origin: [ process.env.FRONTEND_RENDER ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 }
+
 app.use(cors(corsOptions))
 app.options("*", cors(corsOptions))
 
