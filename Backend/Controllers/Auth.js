@@ -150,54 +150,75 @@ export async function LogOutUser(req, res) {
 
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+// import jwt from "jsonwebtoken"
+// import User from "../Models/User.js"
+// import { OAuth2Client } from "google-auth-library"
+// import "dotenv/config"
+
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
 export async function ControllerGoogleAuth(req, res) {
   try {
-    const { token } = req.body;
+    const { token } = req.body
+    if (!token) {
+      return res.status(400).json({ message: "Google token missing" })
+    }
 
-   console.log("token",token)
+    console.log("Received token:", token)
+
+    // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    })
 
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
+    const payload = ticket.getPayload()
+    const { email, name, picture, sub } = payload
 
-  
-    let user = await User.findOne({ email });
-
+    // Find or create user
+    let user = await User.findOne({ email })
     if (!user) {
-     
       user = await User.create({
         email,
-        username:name,
+        username: name,
         avatar: picture,
-        googleId: payload.sub,
-      });
+        googleId: sub,
+      })
     }
 
-    // console.log("process.env",process.env.Secret_Key)
-    const authToken = jwt.sign(
-      { id: user._id, email: user.email, name: user.name },
-      process.env.SECRET_KEY,
-      { expiresIn: "7d" }
-    );
-  console.log("authToken",authToken)
-   const isProduction = process.env.NODE_ENV === "production";
-    res.cookie("token", authToken, {
-      httpOnly: isProduction,
-      secure: isProduction,
-      sameSite: isProduction? "none":"lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    // ✅ Ensure SECRET_KEY exists
+    const JWT_SECRET = process.env.SECRET_KEY
+    if (!JWT_SECRET || JWT_SECRET.trim() === "") {
+      throw new Error(
+        "FATAL: JWT SECRET_KEY missing! Set SECRET_KEY in .env or Render env"
+      )
+    }
 
-  
+    // Generate auth token
+    const authToken = jwt.sign(
+      { id: user._id, email: user.email, name: user.username },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    console.log("Generated authToken:", authToken)
+
+    // Set cookie
+    const isProduction = process.env.NODE_ENV === "production"
+    res.cookie("token", authToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+
     return res.status(200).json({
       message: "Google login successful",
       user,
-    });
+    })
   } catch (err) {
-    console.error(err);
-    return res.status(401).json({ message: "Google auth failed" });
+    console.error("Google Auth Error:", err)
+    return res.status(401).json({ message: err.message || "Google auth failed" })
   }
 }
+
