@@ -55,7 +55,7 @@ connectDB()
 
 // Allowed origins (exact URLs)
 const allowedOrigins = [
-  "https://resumeranker-1-xluc.onrender.com", // deployed frontend
+  process.env.FRONTEND_RENDER, // deployed frontend
   "http://localhost:3000"                     // dev frontend
 ]
 
@@ -75,7 +75,7 @@ app.use((req, res, next) => {
   next()
 })
 
-// Routes
+
 app.use("/ranking", router)
 
 // Error handler
