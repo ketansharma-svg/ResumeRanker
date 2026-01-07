@@ -176,13 +176,13 @@ export async function ControllerGoogleAuth(req, res) {
       });
     }
 
-    
+    console.log("process.env",process.env.SECRET_KEY)
     const authToken = jwt.sign(
       { id: user._id, email: user.email, name: user.name },
       process.env.SECRET_KEY,
       { expiresIn: "7d" }
     );
-
+  console.log("authToken",authToken)
    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", authToken, {
       httpOnly: isProduction,
