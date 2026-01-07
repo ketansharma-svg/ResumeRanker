@@ -9,7 +9,9 @@ export default function JwtVerify(req,res,next){
           console.log("token",token)
           if(!token)return res.status(401).json({message:"Token not found"})
 
-let decoded= jwt.verify(token,process.env.Secret_Key)
+let decoded= jwt.verify(token,process.env.SECRET_KEY
+
+)
 req.userId=decoded.id
 console.log("decoded",decoded)
 
