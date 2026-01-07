@@ -76,7 +76,7 @@
 await userResumesDoc.save();
 
 
-      console.log("AI Results:", aiResults);
+      // console.log("AI Results:", aiResults);
       return res.status(201).json({
         success: true,
         totalResumes: userResumesDoc.resumes.length,
