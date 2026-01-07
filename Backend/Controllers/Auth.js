@@ -176,7 +176,7 @@ export async function ControllerGoogleAuth(req, res) {
       });
     }
 
-    console.log("process.env",process.env.SECRET_KEY)
+    console.log("process.env",process.env.Secret_Key)
     const authToken = jwt.sign(
       { id: user._id, email: user.email, name: user.name },
       process.env.SECRET_KEY,
