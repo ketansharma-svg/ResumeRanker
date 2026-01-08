@@ -4,7 +4,7 @@ import { GoogleLogin } from "@react-oauth/google"
 import { toast } from "sonner"
 import { useAppDispatch } from "../../Hooks"
 import { setIsOnline } from "../../Features/Counter/Counter"
-
+import { useRouter } from "next/navigation"
 
 
 
@@ -14,7 +14,7 @@ import { setIsOnline } from "../../Features/Counter/Counter"
 
 
 export default function LoginButton() {
-
+let router=useRouter()
 const dispatch=useAppDispatch()
 async function handelLogin(res:any){
           console.log("res",res.credential)
@@ -26,13 +26,13 @@ async function handelLogin(res:any){
         toast("User Log in")
          
         dispatch(setIsOnline(true))
-
+         router.push("/MainFolder/uploadResume")
       }
           }catch(err){
               
               console.log("login error")
           }
-     console.log("hello2")
+  
     }
 
 

@@ -121,5 +121,9 @@
   }
   body {
     @apply bg-background text-foreground;
+   
   }
+}
+body {
+  @apply overflow-y-scroll;
 }

@@ -19,11 +19,14 @@ export function UploadResume() {
 
 
   interface RankedResume {
-  fileName: string;
-  finalScore: number;
-  matchedSkills: string[];
-  missingSkills: string[];
-}
+    fileName: string;
+    finalScore: number;
+    matchedSkills: string[];
+    missingSkills: string[];
+
+    experienceLevel: string
+
+  }
 
   const [folder, setFolder] = useState<File[]>([]);
   const [textarea, setTextarea] = useState("");
@@ -222,71 +225,81 @@ export function UploadResume() {
         </Button>
       </div>
 
-<Card className="flex items-center justify-center rounded-2xl">
-  {Uploadedresumes.length > 0 ? (
-    <CardContent className="w-full space-y-4">
-      {Uploadedresumes.map((item, index) => (
-        <div
-          key={index}
-          className="rounded-xl border p-4 space-y-2"
-        >
-          <h1 className="font-semibold text-lg">
-            {item.fileName}
-          </h1>
+      <Card className="flex  rounded-2xl">
+        {Uploadedresumes.length > 0 ? (
+          <CardContent className="w-full space-y-4">
+            {Uploadedresumes.map((item, index) => (
+              <div
+                key={index}
+                className="rounded-xl border p-4 space-y-2"
+              >
+                <h1 className="font-semibold text-lg">
+                  {item.fileName}
+                </h1>
 
-          <p className="text-sm">
-            <strong>Final Score:</strong>{" "}
-            <span className="text-emerald-600">
-              {item.finalScore}
-            </span>
-          </p>
+                <p className="text-sm flex align items-center justify-between">
+                 <div>
+                   <strong>Final Score:</strong>{" "}
+                  <span className="text-emerald-600">
+                    {item.finalScore}
+                  </span>
+                 </div>
+                 <div>
+ <strong>experince level:</strong>{" "}
+                  <span className="text-emerald-600">
+                    {item.experienceLevel}
+                  </span>
+                 </div>
+                 
 
-          <div>
-            <p className="font-medium text-sm">Matched Skills:</p>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {item.matchedSkills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700"
-                >
-                  {skill}
-                </span>
-              ))}
+                </p>
+
+                <div>
+                  <p className="font-medium text-sm">Matched Skills:</p>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {item.matchedSkills.map((skill, i) => (
+                      <span
+                        key={i}
+                        className="rounded-full bg-emerald-100 px-2 py-1 text-xs text-emerald-700"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium text-sm text-red-600">
+                    Missing Skills:
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {item.missingSkills.map((skill, i) => (
+                      <span
+                        key={i}
+                        className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        ) : (
+          <CardContent className="text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
+              <Users className="h-7 w-7 text-emerald-600" />
             </div>
-          </div>
-
-          <div>
-            <p className="font-medium text-sm text-red-600">
-              Missing Skills:
+            <h3 className="text-lg font-semibold">
+              Ready to Rank Candidates
+            </h3>
+            <p className="mt-2 text-sm text-slate-500">
+              Upload resumes and get AI-powered ranking instantly.
             </p>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {item.missingSkills.map((skill, i) => (
-                <span
-                  key={i}
-                  className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
-    </CardContent>
-  ) : (
-    <CardContent className="text-center">
-      <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
-        <Users className="h-7 w-7 text-emerald-600" />
-      </div>
-      <h3 className="text-lg font-semibold">
-        Ready to Rank Candidates
-      </h3>
-      <p className="mt-2 text-sm text-slate-500">
-        Upload resumes and get AI-powered ranking instantly.
-      </p>
-    </CardContent>
-  )}
-</Card>
+          </CardContent>
+        )}
+      </Card>
 
     </div>
   );

@@ -147,7 +147,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Footer */}
+      
           <div className="mt-6 flex flex-col items-center gap-2">
             <span className="text-[#65758B] text-xs mb-10 mt-5">
               or continue with

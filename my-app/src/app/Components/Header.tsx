@@ -35,15 +35,16 @@ import { setIsOnline } from "../Features/Counter/Counter";
         dispatch(setIsOnline(true));
         console.log("user is authenticated")
         router.push("/");
-      } else {
-        dispatch(setIsOnline(false))
       }
     } catch (err) {
-      dispatch(setIsOnline(false));
+      // dispatch(setIsOnline(false));
     }
-  }
-
-  checkAuth();
+  } 
+  
+if(!isOnline){
+ checkAuth();
+}
+ 
 
   useEffect(() => {
     checkAuth();
