@@ -135,7 +135,7 @@ if(res.status==201){
             <p className="text-[#65758B] text-sm">
               Don&apos;t have an account?{" "}
               <span className="text-[#1DAFA1] underline cursor-pointer">
-                <Link href="/MainFolder/signInPage">Sign up free</Link>
+                <Link href="/MainFolder/loginPage">Sign up free</Link>
               </span>
             </p>
           </div>

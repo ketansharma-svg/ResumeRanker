@@ -3,7 +3,6 @@
   import { rankAndSelectTopResumes } from "../services/aiResumeRanker.js";
 
   export async function Resumes(req, res) {
-    console.log("idfhnuidshfsdhfud")
     try {
       const userId = req.userId;
 
@@ -40,7 +39,6 @@
           fileType: file.mimetype.includes("pdf") ? "pdf" : "docx",
           fileSize: file.size,
           textContent: textContent.trim(),
-          
           jobDescription: req.body.jobDescription,
           aiResult: [],
         };

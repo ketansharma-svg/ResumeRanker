@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import instance from "@/src/axios";
 import { span } from "framer-motion/client";
 import { Span } from "next/dist/trace";
-
+import { useAppSelector } from "../../Hooks";
 export function UploadResume() {
 
 
@@ -33,6 +33,9 @@ export function UploadResume() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [Uploadedresumes, setUploadedResumes] = useState<RankedResume[]>([])
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+
+
 
 
   function handleFolder(filelist: FileList) {
@@ -64,6 +67,7 @@ export function UploadResume() {
       fileInputRef.current.value = "";
     }
   }
+
 
 
   async function handelResume() {
