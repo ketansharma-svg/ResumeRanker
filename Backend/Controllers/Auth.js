@@ -63,42 +63,42 @@ sgmail
 
 export async function Login(req, res) {
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
-
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized User" })
+      return res.status(401).json({ message: "Unauthorized User" });
     }
 
-
-    const checkAuth = await bcrypt.compare(password, user.password)
+    const checkAuth = await bcrypt.compare(password, user.password);
     if (!checkAuth) {
-      return res.status(400).json({ message: "Password does not match" })
+      return res.status(400).json({ message: "Password does not match" });
     }
-
 
     const token = jwt.sign(
       { id: user._id },
       process.env.SECRET_KEY,
       { expiresIn: "7d" }
-    )
+    );
 
-const isProduction = process.env.NODE_ENV === "production";
-    res.cookie("token", token, {
-      httpOnly: isProduction,
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
+      httpOnly: true,
       secure: isProduction,
-      sameSite:"none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+    };
 
-    return res.json({ success: true })
+    res.cookie("token", token, cookieOptions);
+
+    return res.json({ success: true });
 
   } catch (err) {
-    console.error("LOGIN ERROR:", err)
-    return res.status(500).json({ message: "Internal Server Error" })
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
 
 
 export async function UserAuthenticated(req, res) {
@@ -152,39 +152,39 @@ export async function LogOutUser(req, res) {
 
 export async function ControllerGoogleAuth(req, res) {
   try {
-    const { token } = req.body
+    const { token } = req.body;
     if (!token) {
-      return res.status(400).json({ message: "Google token missing" })
+      return res.status(400).json({ message: "Google token missing" });
     }
 
-    console.log("Received token:", token)
+    console.log("Received token:", token);
 
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
-    })
+    });
 
-    const payload = ticket.getPayload()
-    const { email, name, picture, sub } = payload
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub } = payload;
 
     // Find or create user
-    let user = await User.findOne({ email })
+    let user = await User.findOne({ email });
     if (!user) {
       user = await User.create({
         email,
         username: name,
         avatar: picture,
         googleId: sub,
-      })
+      });
     }
 
-    // ✅ Ensure SECRET_KEY exists
-    const JWT_SECRET = "thisismysecretkey"
+    // JWT secret
+    const JWT_SECRET = process.env.SECRET_KEY || "thisismysecretkey";
     if (!JWT_SECRET || JWT_SECRET.trim() === "") {
       throw new Error(
         "FATAL: JWT SECRET_KEY missing! Set SECRET_KEY in .env or Render env"
-      )
+      );
     }
 
     // Generate auth token
@@ -192,26 +192,29 @@ export async function ControllerGoogleAuth(req, res) {
       { id: user._id, email: user.email, name: user.username },
       JWT_SECRET,
       { expiresIn: "7d" }
-    )
+    );
 
-    console.log("Generated authToken:", authToken)
+    console.log("Generated authToken:", authToken);
 
-    // Set cookie
-    const isProduction = process.env.NODE_ENV === "production"
-    res.cookie("token", authToken, {
+    // Cookie options
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
       httpOnly: true,
       secure: isProduction,
-      sameSite: "none" ,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-    })
+    };
+
+    res.cookie("token", authToken, cookieOptions);
 
     return res.status(200).json({
       message: "Google login successful",
       user,
-    })
+    });
   } catch (err) {
-    console.error("Google Auth Error:", err)
-    return res.status(401).json({ message: err.message || "Google auth failed" })
+    console.error("Google Auth Error:", err);
+    return res.status(401).json({ message: err.message || "Google auth failed" });
   }
 }
+
 
