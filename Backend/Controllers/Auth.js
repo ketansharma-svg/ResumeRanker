@@ -117,26 +117,35 @@ export async function UserAuthenticated(req, res) {
 
 export async function LogOutUser(req, res) {
   try {
-    console.log("Logout request received");
-
     const isProduction = process.env.NODE_ENV === "production";
 
-    res.clearCookie("token", {
+    // Define options for clearing cookies
+    const cookieOptions = (sameSite) => ({
       httpOnly: true,
-  secure: true,      
-  sameSite: "None",
+      secure: isProduction,           // true only in production
+      sameSite,
       path: "/",
-      maxAge: 0,
+      domain: isProduction ? "resumeranker-jxh5.onrender.com" : undefined,
     });
 
-    console.log("Cookie deleted");
-    return res.status(200).json({ message: "User logged out successfully" });
+    // Clear token cookie (originally SameSite=None)
+    res.clearCookie("token", cookieOptions(isProduction ? "None" : "Lax"));
 
+    // Clear access token cookie (SameSite=Lax)
+    res.clearCookie("login_access_token_wrank", cookieOptions("Lax"));
+
+ 
+    res.clearCookie("login_refresh_token_wrank", cookieOptions("Lax"));
+
+    return res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
     console.error("Logout error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+
+
 
 
 
