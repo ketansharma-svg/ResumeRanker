@@ -115,36 +115,27 @@ export async function UserAuthenticated(req, res) {
 
 export async function LogOutUser(req, res) {
   try {
-    console.log("hello1")
+    console.log("Logout request received");
+
     const isProduction = process.env.NODE_ENV === "production";
-    res.clearCookie("login_access_token_wrank", {
-      httpOnly: isProduction,
+    const cookieOptions = {
+      httpOnly: true,
       secure: isProduction,
-      sameSite:"none",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
+      sameSite: isProduction ? "none" : "lax",
+    };
 
+    res.clearCookie("login_access_token_wrank", cookieOptions);
+    res.clearCookie("login_refresh_token_wrank", cookieOptions);
+    res.clearCookie("token", cookieOptions);
 
-    res.clearCookie("login_refresh_token_wrank", {
-      httpOnly:isProduction,
-      secure: isProduction,
-      sameSite:"none"
-      ,
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
-
-
-    res.clearCookie("token", {
-      httpOnly: isProduction,
-      secure: isProduction,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    })
-    res.status(200).json({ message: "User logged out successfully" })
+    console.log("All cookies cleared");
+    res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Internal Server Error " })
+    console.error("Logout error:", err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
 
 
 
