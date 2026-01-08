@@ -86,7 +86,8 @@ export async function Login(req, res) {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+       path: "/"
     };
 
     res.cookie("token", token, cookieOptions);
@@ -122,6 +123,7 @@ export async function LogOutUser(req, res) {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
+       path: "/"
     };
 
     res.clearCookie("login_access_token_wrank", cookieOptions);
@@ -203,6 +205,7 @@ export async function ControllerGoogleAuth(req, res) {
       secure: isProduction,
       sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+       path: "/"
     };
 
     res.cookie("token", authToken, cookieOptions);
