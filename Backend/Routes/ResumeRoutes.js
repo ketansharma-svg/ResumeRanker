@@ -9,7 +9,7 @@ import { ControllerGoogleAuth } from "../Controllers/Auth.js"
 const router = express.Router();
 
 
-router.post("/send/LoginUserOnly/Upload-Resume/Ranking/Score",upload.array('files'), Resumes);
+router.post("/send/LoginUserOnly/Upload-Resume/Ranking/Score",JwtVerify,upload.array('files'), Resumes);
 router.post("/send/Register",Register)
 router.post("/send/get/login",Login)
 router.get("/send/protected/Athentication/User",JwtVerify,UserAuthenticated)

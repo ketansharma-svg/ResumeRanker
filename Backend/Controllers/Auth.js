@@ -32,24 +32,25 @@ export async function Register(req, res) {
       email,
       password: hash
     });
-    console.log("user", user)
-const msg = {
-  to:email ,
-  from:sgmail, 
-  replyTo: 'ketan.sharma@W3eraa.com',
-  subject: 'Sending the email only for Fun basis',
-  text: 'WELCOME to resumeRanker',
-  html: '<strong>and easy to do anywhere</strong>',
-};
-sgmail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
+//     console.log("user", user)
+// co
+// nst msg = {
+//   to:email ,
+//   from:sgmail, 
+//   replyTo: 'ketan.sharma@W3eraa.com',
+//   subject: 'Sending the email only for Fun basis',
+//   text: 'WELCOME to resumeRanker',
+//   html: '<strong>and easy to do anywhere</strong>',
+// };
+// sgmail
+//   .send(msg)
+//   .then(() => {}, error => {
+//     console.error(error);
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
+//     if (error.response) {
+//       console.error(error.response.body)
+//     }
+//   });
 
 
     res.status(201).json({ message: "User created succesfuylly" })
@@ -84,8 +85,8 @@ export async function Login(req, res) {
     const isProduction = process.env.NODE_ENV === "production";
     const cookieOptions = {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+  secure: true,       
+  sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
        path: "/"
     };
@@ -119,24 +120,24 @@ export async function LogOutUser(req, res) {
     console.log("Logout request received");
 
     const isProduction = process.env.NODE_ENV === "production";
-    const cookieOptions = {
+
+    res.clearCookie("token", {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-       path: "/"
-    };
+  secure: true,      
+  sameSite: "None",
+      path: "/",
+      maxAge: 0,
+    });
 
-    res.clearCookie("login_access_token_wrank", cookieOptions);
-    res.clearCookie("login_refresh_token_wrank", cookieOptions);
-    res.clearCookie("token", cookieOptions);
+    console.log("Cookie deleted");
+    return res.status(200).json({ message: "User logged out successfully" });
 
-    console.log("All cookies cleared");
-    res.status(200).json({ message: "User logged out successfully" });
   } catch (err) {
     console.error("Logout error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
 
 
 
@@ -155,15 +156,17 @@ export async function LogOutUser(req, res) {
 export async function ControllerGoogleAuth(req, res) {
   try {
     const { token } = req.body;
-    if (!token) {
+      let value=token
+      console.log("value",value)
+    if (!value) {
       return res.status(400).json({ message: "Google token missing" });
     }
 
-    console.log("Received token:", token);
+    console.log("Received token:", value);
 
     // Verify Google token
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: value,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
@@ -202,8 +205,8 @@ export async function ControllerGoogleAuth(req, res) {
     const isProduction = process.env.NODE_ENV === "production";
     const cookieOptions = {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+  secure: true,      
+  sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
        path: "/"
     };
