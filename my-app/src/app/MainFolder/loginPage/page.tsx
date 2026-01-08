@@ -39,7 +39,7 @@ export default function LoginPage() {
           email: "",
           password: ""
         })
-        router.push("/")
+        router.push("/MainFolder/uploadResume")
       }
     } catch (err) {
       toast("Something Went Wrong")
