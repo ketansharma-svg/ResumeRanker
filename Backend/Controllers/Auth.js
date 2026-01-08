@@ -187,7 +187,7 @@ export async function ControllerGoogleAuth(req, res) {
     }
 
     // ✅ Ensure SECRET_KEY exists
-    const JWT_SECRET = process.env.SECRET_KEY
+    const JWT_SECRET = "thisismysecretkey"
     if (!JWT_SECRET || JWT_SECRET.trim() === "") {
       throw new Error(
         "FATAL: JWT SECRET_KEY missing! Set SECRET_KEY in .env or Render env"
