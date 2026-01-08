@@ -14,7 +14,7 @@ connectDB()
 
 const corsOptions = {
   origin: process.env.NODE_ENV === "production"
-  ? "https://resumeranker-jxh5.onrender.com"
+  ? "https://resumeranker-1-xluc.onrender.com"
   : "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
