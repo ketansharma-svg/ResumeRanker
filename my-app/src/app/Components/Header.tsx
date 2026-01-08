@@ -56,7 +56,7 @@ export default function Header() {
   const handelLogout = async () => {
     try {
      let res= await instance.post("/ranking/send/LoginUserOnly/Upload-Resume/Ranking/logoutsystem", {}, { withCredentials: true });
-
+     
      if(res){
      
       dispatch(setIsOnline(false));

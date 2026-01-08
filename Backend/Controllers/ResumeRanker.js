@@ -4,11 +4,13 @@
 
   export async function Resumes(req, res) {
     try {
+      console.log("hello1")
       const userId = req.userId;
 
       if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
       }
+      console.log("hello2")
 
       if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: "No files uploaded" });

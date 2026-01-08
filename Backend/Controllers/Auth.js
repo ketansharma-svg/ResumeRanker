@@ -122,16 +122,16 @@ export async function LogOutUser(req, res) {
     // Define options for clearing cookies
     const cookieOptions = (sameSite) => ({
       httpOnly: true,
-      secure: isProduction,           // true only in production
+      secure: isProduction,         
       sameSite,
       path: "/",
       domain: isProduction ? "resumeranker-jxh5.onrender.com" : undefined,
     });
 
-    // Clear token cookie (originally SameSite=None)
+ 
     res.clearCookie("token", cookieOptions(isProduction ? "None" : "Lax"));
 
-    // Clear access token cookie (SameSite=Lax)
+   
     res.clearCookie("login_access_token_wrank", cookieOptions("Lax"));
 
  
