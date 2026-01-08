@@ -115,6 +115,7 @@ export async function UserAuthenticated(req, res) {
 
 export async function LogOutUser(req, res) {
   try {
+    console.log("hello1")
     const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("login_access_token_wrank", {
       httpOnly: isProduction,
