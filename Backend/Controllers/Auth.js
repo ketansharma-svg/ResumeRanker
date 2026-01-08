@@ -88,7 +88,7 @@ const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
       httpOnly: isProduction,
       secure: isProduction,
-      sameSite: isProduction? "none":"lax",
+      sameSite:"none",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -120,7 +120,7 @@ export async function LogOutUser(req, res) {
     res.clearCookie("login_access_token_wrank", {
       httpOnly: isProduction,
       secure: isProduction,
-      sameSite: isProduction? "none":"lax",
+      sameSite:"none",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -128,7 +128,8 @@ export async function LogOutUser(req, res) {
     res.clearCookie("login_refresh_token_wrank", {
       httpOnly:isProduction,
       secure: isProduction,
-      sameSite: isProduction? "none":"lax",
+      sameSite:"none"
+      ,
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -136,7 +137,7 @@ export async function LogOutUser(req, res) {
     res.clearCookie("token", {
       httpOnly: isProduction,
       secure: isProduction,
-      sameSite: isProduction? "none":"lax",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
     res.status(200).json({ message: "User logged out successfully" })
@@ -209,7 +210,7 @@ export async function ControllerGoogleAuth(req, res) {
     res.cookie("token", authToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      sameSite: "none" ,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
 
